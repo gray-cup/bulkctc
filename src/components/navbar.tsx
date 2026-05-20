@@ -24,6 +24,7 @@ export function Navbar() {
                 ["Locations", "/available-locations"],
                 ["About", "/about"],
                 ["Contact", "/contact"],
+                ["Buy Samples", "/buy-samples"],
               ].map(([label, href]) => (
                 <Link
                   key={href}
@@ -99,6 +100,7 @@ export function Navbar() {
               ["Locations", "/available-locations"],
               ["About", "/about"],
               ["Contact", "/contact"],
+              ["Buy Samples", "/buy-samples"],
             ].map(([label, href]) => (
               <Link
                 key={href}
