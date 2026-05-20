@@ -4,7 +4,7 @@ import { generateTitle, generateDescription } from "@/lib/seo";
 export const metadata: Metadata = {
   title: generateTitle("Privacy Policy"),
   description: generateDescription(
-    "Read the Privacy Policy for Gray Cup Enterprises Private Limited covering data collection, usage, retention and security for customers and partners."
+    "BulkCTC privacy policy — how we collect, use, and protect your personal data when you order bulk CTC tea or use our website."
   ),
 };
 
@@ -29,7 +29,7 @@ export default function PrivacyPolicy() {
           Our Commitment to Privacy
         </h2>
         <p className="mb-4">
-          At Gray Cup Enterprises Private Limited, we take your privacy
+          At BulkCTC (Gray Cup Enterprises Private Limited), we take your privacy
           seriously. This Privacy Policy describes what personal information we
           collect, how we use it, and the choices you have regarding your
           information. Our primary goal is to provide a secure and trustworthy
@@ -184,7 +184,7 @@ export default function PrivacyPolicy() {
         </p>
 
         <p className="text-sm text-muted-foreground mt-10">
-          Gray Cup Enterprises Private Limited | CIN: U47211DL2025PTC457808
+          Gray Cup Enterprises Private Limited · FF122, Rodeo Drive Mall, GT Road, TDI City, Kundli, Sonipat, Haryana 131030 · CIN: U47211DL2025PTC457808 · GST: 06AAMCG4985H1Z4
         </p>
       </div>
     </div>

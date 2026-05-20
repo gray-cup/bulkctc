@@ -1,251 +1,96 @@
-"use client";
+import type { Metadata } from "next";
+import { generateTitle, generateDescription } from "@/lib/seo";
 
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-
-type Tier = {
-  name: string;
-  description: string;
-  cta: string;
-  ctaVariant?: "default" | "blue" | "red";
-  features: string[];
-  flagText?: string;
+export const metadata: Metadata = {
+  title: generateTitle("Contact Us"),
+  description: generateDescription(
+    "Contact BulkCTC for bulk CTC tea orders, samples, and trade enquiries. Reach us by email, phone, or WhatsApp."
+  ),
 };
 
-/* ---------- Single borderless plan column ---------- */
-function PricingCard({
-  tier,
-  columnRef,
-}: {
-  tier: Tier;
-  columnRef?: React.RefObject<HTMLDivElement | null>;
-}) {
-  return (
-    <div ref={columnRef} className="relative">
-      <Card className="p-0 shadow-none border-0 rounded-none bg-white">
-        <div className="flex flex-col">
-          <CardHeader className="pt-4">
-            <CardTitle className="text-lg font-semibold">{tier.name}</CardTitle>
-          </CardHeader>
-
-          <CardContent className="p-0">
-            <div className="flex w-full flex-col items-start gap-4 pb-4 px-6">
-              <div className="mb-6 flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <p className="text-sm text-neutral-700">{tier.description}</p>
-                </div>
-              </div>
-              <Button
-                className="w-full h-10 rounded-lg"
-                variant={tier.ctaVariant ?? "default"}
-              >
-                {tier.cta}
-              </Button>
-            </div>
-
-            <Separator className="my-5" />
-
-            <ul className="mt-4 flex flex-col gap-4 px-6 pb-4 text-sm">
-              {tier.features.map((f) => (
-                <li key={f} className="flex items-start gap-3">
-                  #<span>{f}</span>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </div>
-      </Card>
-    </div>
-  );
-}
-
-// tracking-[-0.15rem] for dollars and money
-
-/* ---------- Example data ---------- */
-const tiers: Tier[] = [
+const contacts = [
   {
-    name: "General Enquires",
-    description: "We usually respond within 48 hours.",
-    cta: "Send Mail",
-    ctaVariant: "blue",
-    features: ["office@bulkctc.com"],
+    title: "Sales & Orders",
+    desc: "New orders, bulk quotes, and trade enquiries.",
+    email: "sales@bulkctc.com",
   },
   {
-    name: "Legal & Compliance",
-    description: "We usually respond within 48 hours.",
-    cta: "Send Mail",
-    ctaVariant: "red",
-    features: ["legal@bulkctc.com"],
+    title: "General Enquiries",
+    desc: "Any other questions about our products or services.",
+    email: "office@bulkctc.com",
   },
   {
-    name: "Marketing & PR",
-    description: "We usually respond within 48 hours.",
-    cta: "Send Mail",
-    features: ["marketing@bulkctc.com"],
-  },
-  {
-    name: "Call Us",
-    description: "If we miss your call, we'll call you back.",
-    cta: "Call Now",
-    ctaVariant: "blue",
-    features: ["+91 000-work-in-progress"],
+    title: "Legal & Compliance",
+    desc: "Legal notices, GST invoices, and compliance matters.",
+    email: "legal@bulkctc.com",
   },
 ];
 
-/* ---------- Page ---------- */
-export default function PricingPage() {
-  const frameRef = useRef<HTMLDivElement | null>(null);
-
+export default function ContactPage() {
   return (
-    <div className="min-h-screen py-20">
-      <div className="max-w-7xl mx-auto px-4 lg:px-6">
-        <div className="mb-16">
-          <h1 className="text-3xl md:text-4xl font-semibold text-black mb-4">
-            Contact Gray Cup
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Have a question or you want to do business with Gray Cup? There is
-            always a way to reach us.
-            <br />
-            Your message matters.
-          </p>
-        </div>
+    <div className="max-w-3xl mx-auto min-h-screen py-3 sm:py-5 md:py-10 lg:py-20 px-4">
+      <h1 className="text-3xl font-bold tracking-tight text-neutral-900 mb-2">Contact Us</h1>
+      <p className="text-neutral-500 mb-10">
+        We typically respond within one business day.
+      </p>
 
-        <div className="max-w-6xl flex flex-col md:flex-row justify-center items-center max-md:gap-5 md:justify-between mx-auto">
-          <div className="max-w-sm w-full ">
-            <Card className="p-0 border border-gray-200 rounded-2xl bg-white">
-              <div className="flex flex-col ">
-                <CardHeader className="pt-4">
-                  <CardTitle className="text-lg font-semibold">
-                    Sales & Purchases
-                  </CardTitle>
-                </CardHeader>
-
-                <CardContent className="p-0">
-                  <div className="flex w-full flex-col items-start gap-4 px-6 pb-4">
-                    <div className="mb-6 flex flex-col gap-2">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm text-neutral-700">
-                          We usually respond within 48 hours.
-                        </p>
-                      </div>
-                    </div>
-                    <Button
-                      className="w-full h-10 rounded-lg"
-                      variant="lightgray"
-                    >
-                      Send Mail
-                    </Button>
-                  </div>
-
-                  <Separator className="my-5" />
-
-                  <ul className="mt-4 flex flex-col gap-4 px-6 pb-8 text-sm">
-                    <li className="flex items-start gap-3">
-                      <span>#</span>
-                      <span>sales@bulkctc.com</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </div>
-            </Card>
-          </div>
-          <div className="flex-col sm:flex-row flex-wrap hidden lg:flex items-center py-4 gap-4 justify-center">
-            <Image
-              src="/coffee-beans.webp"
-              draggable="false"
-              alt="coffee beans"
-              width="280"
-              height="200"
-            />
-          </div>
-
-          <div className="max-w-sm w-full ">
-            <Card className="p-0 border border-gray-200 rounded-2xl bg-white">
-              <div className="flex flex-col ">
-                <CardHeader className="pt-4">
-                  <CardTitle className="text-lg font-semibold">
-                    Schedule Zoom Meeting
-                  </CardTitle>
-                </CardHeader>
-
-                <CardContent className="p-0">
-                  <div className="flex w-full flex-col items-start gap-4 px-6 pb-4">
-                    <div className="mb-6 flex flex-col gap-2">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm text-neutral-700">
-                          Arjun will be attending this meeting.
-                        </p>
-                      </div>
-                    </div>
-                    <Button className="w-full h-10 rounded-lg" variant="gray">
-                      Schedule
-                    </Button>
-                  </div>
-
-                  <Separator className="my-5" />
-
-                  <ul className="mt-4 flex flex-col gap-4 px-6 pb-8 text-sm">
-                    <li className="flex items-start gap-3">
-                      <span>#</span>
-                      <span>arjun@bulkctc.com</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </div>
-            </Card>
-          </div>
-        </div>
-        <div className="flex justify-between py-4">
-          <div className="flex-col sm:flex-row flex-wrap hidden lg:flex items-center gap-4 justify-start">
-            <Image
-              src="/tea-leaves.svg"
-              draggable="false"
-              alt="coffee beans"
-              width="160"
-              height="160"
-            />
-          </div>
-          <div className="flex-col sm:flex-row flex-wrap hidden lg:flex items-center gap-4 justify-end">
-            <Image
-              src="/tea-leaves.svg"
-              draggable="false"
-              alt="coffee beans"
-              width="160"
-              height="160"
-            />
-          </div>
-        </div>
-        <div className="max-w-6xl mx-auto mt-10">
-          {/* Wrapper must be relative so overlay positions correctly */}
-          <div className="relative">
-            {/* Framed container can be overflow-hidden now; corners stay clean */}
-            <div
-              ref={frameRef}
-              className="rounded-2xl max-md:max-w-sm max-md:mx-auto border border-gray-200 bg-white overflow-hidden"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-x divide-gray-200">
-                {tiers.map((t) => {
-                  return (
-                    <div key={t.name} className="relative">
-                      <PricingCard tier={t} />
-                    </div>
-                  );
-                })}
-              </div>
+      {/* Contact cards */}
+      <div className="space-y-4 mb-12">
+        {contacts.map((c) => (
+          <div key={c.email} className="border border-gray-200 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <p className="font-semibold text-sm text-neutral-900">{c.title}</p>
+              <p className="text-sm text-neutral-500 mt-0.5">{c.desc}</p>
             </div>
+            <a
+              href={`mailto:${c.email}`}
+              className="shrink-0 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
+            >
+              {c.email}
+            </a>
           </div>
-          {/* end wrapper */}
-        </div>
+        ))}
+      </div>
+
+      {/* Business details */}
+      <div className="border-t border-gray-200 pt-8">
+        <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400 mb-4">
+          Business Details
+        </h2>
+        <dl className="space-y-2 text-sm">
+          <div className="flex gap-4">
+            <dt className="w-36 shrink-0 text-neutral-400">Legal name</dt>
+            <dd className="text-neutral-700">Gray Cup Enterprises Private Limited</dd>
+          </div>
+          <div className="flex gap-4">
+            <dt className="w-36 shrink-0 text-neutral-400">Brand</dt>
+            <dd className="text-neutral-700">BulkCTC</dd>
+          </div>
+          <div className="flex gap-4">
+            <dt className="w-36 shrink-0 text-neutral-400">Address</dt>
+            <dd className="text-neutral-700">FF122, Rodeo Drive Mall, GT Road, TDI City, Kundli, Sonipat, Haryana — 131030</dd>
+          </div>
+          <div className="flex gap-4">
+            <dt className="w-36 shrink-0 text-neutral-400">CIN</dt>
+            <dd className="text-neutral-700 font-mono">U47211DL2025PTC457808</dd>
+          </div>
+          <div className="flex gap-4">
+            <dt className="w-36 shrink-0 text-neutral-400">GST</dt>
+            <dd className="text-neutral-700 font-mono">06AAMCG4985H1Z4</dd>
+          </div>
+          <div className="flex gap-4">
+            <dt className="w-36 shrink-0 text-neutral-400">FSSAI</dt>
+            <dd className="text-neutral-700 font-mono">23326008000195</dd>
+          </div>
+          <div className="flex gap-4">
+            <dt className="w-36 shrink-0 text-neutral-400">IEC</dt>
+            <dd className="text-neutral-700 font-mono">AAMCG4985H</dd>
+          </div>
+          <div className="flex gap-4">
+            <dt className="w-36 shrink-0 text-neutral-400">UPI</dt>
+            <dd className="text-neutral-700 font-mono">graycup@kotak</dd>
+          </div>
+        </dl>
       </div>
     </div>
   );

@@ -10,6 +10,8 @@ export default function Footer() {
     { href: "/sitemap.xml", label: "Sitemap" },
     { href: "/privacy", label: "Privacy" },
     { href: "/terms", label: "Terms" },
+    { href: "/refunds", label: "Refunds" },
+    { href: "/shipping", label: "Shipping" },
   ];
 
   return (

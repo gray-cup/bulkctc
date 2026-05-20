@@ -46,7 +46,7 @@ export default function Impressum() {
           <p>
             <strong>GST Identification Number:</strong>{" "}
             <code className="bg-neutral-100 px-2 py-1 rounded text-sm">
-              07AAMCG4985H1Z2
+              06AAMCG4985H1Z4
             </code>
           </p>
         </div>
