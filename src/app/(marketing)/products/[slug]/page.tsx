@@ -42,16 +42,7 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="max-w-5xl mx-auto px-4 lg:px-6 py-12">
-      {/* Breadcrumb */}
-      <nav className="text-xs text-neutral-400 mb-8 flex gap-1.5 items-center">
-        <Link href="/" className="hover:text-neutral-600 transition-colors">Home</Link>
-        <span>/</span>
-        <Link href="/buy-samples" className="hover:text-neutral-600 transition-colors">Samples</Link>
-        <span>/</span>
-        <span className="text-neutral-700">{product.name}</span>
-      </nav>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
         {/* Portrait image */}
         <div className="relative w-full aspect-[3/4] overflow-hidden bg-neutral-50">
           <Image
