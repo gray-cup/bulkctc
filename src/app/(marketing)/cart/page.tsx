@@ -152,7 +152,6 @@ function OtherProductCard({
 function CartPageInner() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [mounted, setMounted] = useState(false);
-  const [showCheckout, setShowCheckout] = useState(false);
 
   useEffect(() => {
     setCart(getCart());
@@ -194,7 +193,6 @@ function CartPageInner() {
     const updated = cart.filter((i) => !(i.slug === slug && i.kg === kg));
     setCart(updated);
     saveCart(updated);
-    if (updated.length === 0) setShowCheckout(false);
   }
 
   function addOtherProduct(slug: string, kg: number, qty: number) {
@@ -330,27 +328,14 @@ function CartPageInner() {
           </div>
 
           {/* Checkout panel */}
-          <div className="sticky top-8">
-            {!showCheckout ? (
-              <button
-                type="button"
-                onClick={() => setShowCheckout(true)}
-                className="w-full py-3.5 bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors cursor-pointer active:scale-95"
-              >
-                Proceed to Checkout
-              </button>
-            ) : (
-              <div className="border border-gray-200 p-5">
-                <CheckoutForm
-                  products={enriched.map((i) => i.slug)}
-                  quantityTier={enriched
-                    .map((i) => `${i.quantity}×${i.kg}kg ${i.product.name}`)
-                    .join(", ")}
-                  totalAmount={total}
-                  onBack={() => setShowCheckout(false)}
-                />
-              </div>
-            )}
+          <div className="sticky top-8 border border-gray-200 p-5">
+            <CheckoutForm
+              products={enriched.map((i) => i.slug)}
+              quantityTier={enriched
+                .map((i) => `${i.quantity}×${i.kg}kg ${i.product.name}`)
+                .join(", ")}
+              totalAmount={total}
+            />
           </div>
         </div>
 
