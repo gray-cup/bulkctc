@@ -7,11 +7,16 @@ import { useRouter } from "next/navigation";
 import { chaiProducts } from "@/data/chai-products";
 import { addToCart } from "@/lib/cart";
 
-const WEIGHTS = [3, 5, 10, 20] as const;
+const WEIGHTS = [1, 3, 5, 10, 20] as const;
 type Weight = (typeof WEIGHTS)[number];
 
 function fmt(n: number) {
   return "₹" + n.toLocaleString("en-IN");
+}
+
+function getPrice(product: (typeof chaiProducts)[number], kg: number): number {
+  const prices = "prices" in product ? (product as { prices: Record<number, number> }).prices : undefined;
+  return prices?.[kg] ?? product.pricePerKg * kg;
 }
 
 function WeightDropdown({
@@ -42,7 +47,7 @@ function WeightDropdown({
         className="w-full flex items-center justify-between gap-2 border border-gray-200 bg-white px-3 py-2.5 text-sm text-neutral-700 hover:border-gray-400 transition-colors cursor-pointer"
       >
         <span className="font-medium">{kg} kg</span>
-        <span className="text-xs text-neutral-400">{fmt(product.pricePerKg * kg)}</span>
+        <span className="text-xs text-neutral-400">{fmt(getPrice(product, kg))}</span>
         <svg
           className={`w-3.5 h-3.5 text-neutral-400 shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
           fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
@@ -66,7 +71,7 @@ function WeightDropdown({
             >
               <span className="font-medium">{w} kg</span>
               <span className={`text-xs ${w === kg ? "text-neutral-300" : "text-neutral-400"}`}>
-                {fmt(product.pricePerKg * w)}
+                {fmt(getPrice(product, w))}
               </span>
             </button>
           ))}
@@ -82,7 +87,7 @@ function ProductCard({ product }: { product: (typeof chaiProducts)[number] }) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
-  const price = product.pricePerKg * kg * qty;
+  const price = getPrice(product, kg) * qty;
 
   function handleAdd() {
     addToCart(product.slug, kg, qty);
