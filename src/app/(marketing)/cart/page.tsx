@@ -21,6 +21,64 @@ function getPrice(product: (typeof chaiProducts)[number], kg: number): number {
 
 type EnrichedItem = CartItem & { product: (typeof chaiProducts)[number] };
 
+function WeightDropdown({
+  product,
+  kg,
+  onChange,
+  showPrice = false,
+}: {
+  product: (typeof chaiProducts)[number];
+  kg: Weight;
+  onChange: (w: Weight) => void;
+  showPrice?: boolean;
+}) {
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex items-center justify-between gap-2 border border-gray-200 bg-white px-3 py-1.5 text-sm text-neutral-700 hover:border-gray-400 transition-colors cursor-pointer"
+      >
+        <span className="font-medium">{kg} kg</span>
+        {showPrice && <span className="text-xs text-neutral-400">{fmt(getPrice(product, kg))}</span>}
+        <svg className={`w-3.5 h-3.5 text-neutral-400 shrink-0 transition-transform ${open ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {open && (
+        <div className="absolute z-20 left-0 right-0 top-full mt-0.5 border border-gray-200 bg-white shadow-lg min-w-[120px]">
+          {WEIGHTS.map((w) => (
+            <button
+              key={w}
+              type="button"
+              onClick={() => { onChange(w); setOpen(false); }}
+              className={`w-full flex items-center justify-between px-3 py-2.5 text-sm cursor-pointer transition-colors ${
+                w === kg ? "bg-neutral-900 text-white" : "text-neutral-700 hover:bg-neutral-50"
+              }`}
+            >
+              <span className="font-medium">{w} kg</span>
+              <span className={`text-xs ${w === kg ? "text-neutral-300" : "text-neutral-400"}`}>
+                {fmt(getPrice(product, w))}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function OtherProductCard({
   product,
   onAdded,
@@ -54,17 +112,7 @@ function OtherProductCard({
           <p className="text-xs text-neutral-400 mt-0.5">{product.blend}</p>
         </div>
 
-        <select
-          value={kg}
-          onChange={(e) => setKg(Number(e.target.value) as Weight)}
-          className="border border-gray-200 text-sm px-3 py-2 text-neutral-700 bg-white focus:outline-none focus:border-gray-400 cursor-pointer"
-        >
-          {WEIGHTS.map((w) => (
-            <option key={w} value={w}>
-              {w} kg — {fmt(getPrice(product, w))}
-            </option>
-          ))}
-        </select>
+        <WeightDropdown product={product} kg={kg} onChange={setKg} showPrice />
 
         <div className="flex items-center gap-2">
           <button
@@ -235,19 +283,11 @@ function CartPageInner() {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-3 mt-3">
-                    <select
-                      value={item.kg}
-                      onChange={(e) =>
-                        updateItem(item.slug, item.kg, { kg: Number(e.target.value) as Weight })
-                      }
-                      className="border border-gray-200 text-sm px-2 py-1.5 text-neutral-700 bg-white focus:outline-none focus:border-gray-400 cursor-pointer"
-                    >
-                      {WEIGHTS.map((w) => (
-                        <option key={w} value={w}>
-                          {w} kg
-                        </option>
-                      ))}
-                    </select>
+                    <WeightDropdown
+                      product={item.product}
+                      kg={item.kg as Weight}
+                      onChange={(w) => updateItem(item.slug, item.kg, { kg: w })}
+                    />
 
                     <div className="flex items-center gap-1.5">
                       <button
