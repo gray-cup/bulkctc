@@ -142,36 +142,36 @@ export function CheckoutForm({ products, quantityTier, totalAmount, onBack }: Pr
           ))}
         </div>
 
-        {/* Name */}
-        <div className="space-y-1.5">
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            placeholder="Your name"
-            value={name}
-            className={fieldClass("name")}
-            onChange={(e) => setName(e.target.value)}
-            onBlur={() => {
-              touch("name");
-              if (name.trim()) setName(titleCase(name.trim()));
-            }}
-          />
-          {errors.name && showErr("name") && <p className="text-xs text-red-500">{errors.name}</p>}
-        </div>
-
-        {/* Phone */}
-        <div className="space-y-1.5">
-          <Label htmlFor="phone">Phone Number</Label>
-          <Input
-            id="phone"
-            type="tel"
-            placeholder="+91 98765 43210"
-            value={phone}
-            className={fieldClass("phone")}
-            onChange={(e) => setPhone(e.target.value)}
-            onBlur={() => touch("phone")}
-          />
-          {errors.phone && showErr("phone") && <p className="text-xs text-red-500">{errors.phone}</p>}
+        {/* Name + Phone */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              placeholder="Your name"
+              value={name}
+              className={fieldClass("name")}
+              onChange={(e) => setName(e.target.value)}
+              onBlur={() => {
+                touch("name");
+                if (name.trim()) setName(titleCase(name.trim()));
+              }}
+            />
+            {errors.name && showErr("name") && <p className="text-xs text-red-500">{errors.name}</p>}
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="phone">Phone Number</Label>
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="+91 98765 43210"
+              value={phone}
+              className={fieldClass("phone")}
+              onChange={(e) => setPhone(e.target.value)}
+              onBlur={() => touch("phone")}
+            />
+            {errors.phone && showErr("phone") && <p className="text-xs text-red-500">{errors.phone}</p>}
+          </div>
         </div>
 
         {/* Email */}

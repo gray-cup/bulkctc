@@ -33,7 +33,17 @@ function CheckoutInner() {
   const unitPrice = ("prices" in product && product.prices)
     ? (product.prices as Record<number, number>)[kg] ?? product.pricePerKg * kg
     : product.pricePerKg * kg;
-  const total = unitPrice * qty;
+  const subtotal = unitPrice * qty;
+
+  const deliveryInfo = "delivery" in product
+    ? (product.delivery as { upTo5kg: number; above5kg: number })
+    : null;
+  const totalKg = kg * qty;
+  const deliveryFee = deliveryInfo
+    ? (totalKg <= 5 ? deliveryInfo.upTo5kg : deliveryInfo.above5kg)
+    : 0;
+
+  const total = subtotal + deliveryFee;
 
   return (
     <div className="min-h-screen py-12">
@@ -71,9 +81,19 @@ function CheckoutInner() {
                 </div>
               </div>
             </div>
-            <div className="flex justify-between px-4 py-3 border-t border-gray-200 bg-gray-50">
-              <p className="text-sm font-semibold text-neutral-900">Total</p>
-              <p className="text-sm font-semibold text-neutral-900">{fmt(total)}</p>
+            <div className="border-t border-gray-200 divide-y divide-gray-100">
+              <div className="flex justify-between px-4 py-2.5 bg-gray-50">
+                <p className="text-xs text-neutral-500">Subtotal</p>
+                <p className="text-xs text-neutral-700">{fmt(subtotal)}</p>
+              </div>
+              <div className="flex justify-between px-4 py-2.5 bg-gray-50">
+                <p className="text-xs text-neutral-500">Delivery</p>
+                <p className="text-xs text-neutral-700">{deliveryFee === 0 ? "—" : fmt(deliveryFee)}</p>
+              </div>
+              <div className="flex justify-between px-4 py-3 bg-gray-50">
+                <p className="text-sm font-semibold text-neutral-900">Total</p>
+                <p className="text-sm font-semibold text-neutral-900">{fmt(total)}</p>
+              </div>
             </div>
           </div>
 
