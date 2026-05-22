@@ -141,7 +141,7 @@ function ProductCard({ product }: { product: (typeof chaiProducts)[number] }) {
           <button
             type="button"
             onClick={handleBuyNow}
-            className="flex-1 py-2 text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors cursor-pointer rounded-lg"
+            className="flex-1 py-2 text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors cursor-pointer"
           >
             Buy Now
           </button>
