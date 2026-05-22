@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, Suspense } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CheckoutForm } from "@/components/buy-samples/CheckoutForm";
 import { chaiProducts } from "@/data/chai-products";
@@ -37,11 +39,14 @@ function AddProductCard({
   const price = calcPrice(product.pricePerKg, tierData.kg);
 
   return (
-    <div className="flex flex-col border border-gray-200 bg-white overflow-hidden hover:border-gray-300 hover:shadow-sm transition-all">
+    <div className="group flex flex-col border border-gray-200 bg-white overflow-hidden hover:border-gray-300 hover:shadow-sm transition-all">
+      <div className="relative w-full aspect-[3/4]">
+        <Image src="/wholesale-chai.png" alt={product.name} fill className="object-cover" />
+      </div>
       <div className="flex flex-col flex-1 p-4 gap-3">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-0.5">
-            <p className="font-semibold text-sm text-neutral-900">{product.name}</p>
+            <Link href={`/products/${product.slug}`} className="font-semibold text-sm text-neutral-900 hover:underline">{product.name}</Link>
             <span className="text-xs text-neutral-400 font-mono">{product.grade}</span>
           </div>
           <p className="text-xs text-neutral-500 leading-relaxed">{product.description}</p>
@@ -63,13 +68,21 @@ function AddProductCard({
           ))}
         </div>
         <p className="text-base font-semibold text-neutral-900">{fmt(price)}</p>
-        <button
-          type="button"
-          onClick={() => onAdd(tier)}
-          className="w-full py-2.5 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors cursor-pointer"
-        >
-          + Add
-        </button>
+        <div className="flex gap-1.5">
+          <Link
+            href={`/products/${product.slug}`}
+            className="hidden group-hover:flex items-center justify-center py-2.5 px-3 text-sm font-medium bg-neutral-900 text-white hover:bg-neutral-800 transition-colors whitespace-nowrap"
+          >
+            Buy Now
+          </Link>
+          <button
+            type="button"
+            onClick={() => onAdd(tier)}
+            className="flex-1 py-2.5 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors cursor-pointer"
+          >
+            + Add
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -178,7 +191,7 @@ function BuySamplesInner() {
               return (
                 <div
                   key={product.slug}
-                  className={`relative flex flex-col border bg-white transition-all duration-150 ${
+                  className={`group relative flex flex-col border bg-white transition-all duration-150 ${
                     isSelected
                       ? "border-blue-500 ring-2 ring-blue-400/30 shadow-md"
                       : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
@@ -189,10 +202,13 @@ function BuySamplesInner() {
                       Selected
                     </div>
                   )}
+                  <div className="relative w-full aspect-[3/4]">
+                    <Image src="/wholesale-chai.png" alt={product.name} fill className="object-cover" />
+                  </div>
                   <div className="flex flex-col flex-1 p-4 gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className="font-semibold text-sm text-neutral-900">{product.name}</p>
+                        <Link href={`/products/${product.slug}`} className="font-semibold text-sm text-neutral-900 hover:underline">{product.name}</Link>
                         <span className="text-xs text-neutral-400 font-mono">{product.grade}</span>
                       </div>
                       <p className="text-xs text-neutral-500 leading-relaxed">{product.description}</p>
@@ -201,17 +217,26 @@ function BuySamplesInner() {
                       <p className="text-xs text-neutral-400">{gridTier.label} bag</p>
                       <p className="text-base font-semibold text-neutral-900">{fmt(price)}</p>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => toggle(product.slug)}
-                      className={`w-full h-9 cursor-pointer text-sm font-medium transition-colors ${
-                        isSelected
-                          ? "bg-blue-600 text-white hover:bg-blue-700"
-                          : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-                      }`}
-                    >
-                      {isSelected ? "Remove" : "Select"}
-                    </button>
+                    {/* Default: full-width select. On hover: two buttons side by side */}
+                    <div className="flex gap-1.5">
+                      <Link
+                        href={`/products/${product.slug}`}
+                        className="hidden group-hover:flex items-center justify-center h-9 px-3 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap"
+                      >
+                        Buy Now
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => toggle(product.slug)}
+                        className={`flex-1 h-9 cursor-pointer text-sm font-medium transition-colors ${
+                          isSelected
+                            ? "bg-blue-600 text-white hover:bg-blue-700"
+                            : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                        }`}
+                      >
+                        {isSelected ? "Remove" : "Select"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
