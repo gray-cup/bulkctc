@@ -30,7 +30,10 @@ function CheckoutInner() {
     );
   }
 
-  const total = product.pricePerKg * kg * qty;
+  const unitPrice = ("prices" in product && product.prices)
+    ? (product.prices as Record<number, number>)[kg] ?? product.pricePerKg * kg
+    : product.pricePerKg * kg;
+  const total = unitPrice * qty;
 
   return (
     <div className="min-h-screen py-12">
@@ -64,7 +67,7 @@ function CheckoutInner() {
                 <p className="text-xs text-neutral-400 mt-0.5">{product.blend}</p>
                 <div className="mt-3 space-y-1 text-xs text-neutral-500">
                   <p>{kg} kg bag × {qty}</p>
-                  <p>{fmt(product.pricePerKg)}/kg</p>
+                  <p>{fmt(Math.round(unitPrice / kg))}/kg</p>
                 </div>
               </div>
             </div>

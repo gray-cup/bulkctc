@@ -101,7 +101,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, paymentLink: data.link_url, linkId });
   } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
     console.error("create-payment error:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
