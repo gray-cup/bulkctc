@@ -1,19 +1,22 @@
 export const chaiProducts = [
   {
     slug: "tea-stall-chai",
-    name: "Tea Stall Chai",
-    grade: "D1",
+    name: "Tea Stall Chai Standard",
+    grade: "Special",
     blend: "D1 + PD",
     description: "Economy D1 dust — maximum yield per cup, built for high-volume roadside stalls.",
-    pricePerKg: 155,
+    pricePerKg: 275,
+    prices: { 1: 275, 3: 825, 5: 1350, 10: 2650, 20: 5000 } as Record<number, number>,
   },
   {
     slug: "kadak-chai",
-    name: "Kadak Chai",
-    grade: "PD",
+    name: "Tea Stall Chai Premium",
+    grade: "Special",
     blend: "OF + PD + BP",
     description: "Pekoe Dust — deep mahogany colour, bold full-bodied flavour. The hallmark of a proper kadak cup.",
-    pricePerKg: 195,
+    pricePerKg: 350,
+    prices: { 1: 350, 3: 1000, 5: 1690, 10: 3300, 20: 6500 } as Record<number, number>,
+    delivery: { upTo5kg: 150, above5kg: 400 } as { upTo5kg: number; above5kg: number },
   },
   {
     slug: "hotel-chai",

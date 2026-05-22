@@ -4,20 +4,23 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { addToCart } from "@/lib/cart";
 
-const WEIGHTS = [3, 5, 10, 20] as const;
+const WEIGHTS = [1, 3, 5, 10, 20] as const;
 type Weight = (typeof WEIGHTS)[number];
 
 type Props = {
   slug: string;
   pricePerKg: number;
+  prices?: Record<number, number>;
 };
 
-export function ProductBuySection({ slug, pricePerKg }: Props) {
+export function ProductBuySection({ slug, pricePerKg, prices }: Props) {
   const [kg, setKg] = useState<Weight>(3);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
-  const total = pricePerKg * kg * qty;
+  const unitPrice = prices?.[kg] ?? pricePerKg * kg;
+  const perKg = Math.round(unitPrice / kg);
+  const total = unitPrice * qty;
 
   function handleAddToCart() {
     addToCart(slug, kg, qty);
@@ -64,9 +67,14 @@ export function ProductBuySection({ slug, pricePerKg }: Props) {
         <span className="text-xs text-neutral-400">{qty === 1 ? "bag" : "bags"}</span>
       </div>
 
-      <p className="text-2xl font-bold text-neutral-900">
-        ₹{total.toLocaleString("en-IN")}
-      </p>
+      <div>
+        <p className="text-2xl font-bold text-neutral-900">
+          ₹{total.toLocaleString("en-IN")}
+        </p>
+        <p className="text-xs text-neutral-400 mt-0.5">
+          ₹{perKg.toLocaleString("en-IN")}/kg
+        </p>
+      </div>
 
       {!added ? (
         <button

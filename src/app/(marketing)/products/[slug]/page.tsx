@@ -7,11 +7,16 @@ import { generateTitle, generateDescription } from "@/lib/seo";
 import { ProductBuySection } from "@/components/buy-samples/ProductBuySection";
 
 const TIERS = [
+  { label: "1kg",  kg: 1  },
   { label: "3kg",  kg: 3  },
   { label: "5kg",  kg: 5  },
   { label: "10kg", kg: 10 },
   { label: "20kg", kg: 20 },
 ] as const;
+
+function tierPrice(product: { pricePerKg: number; prices?: Record<number, number> }, kg: number) {
+  return product.prices?.[kg] ?? product.pricePerKg * kg;
+}
 
 function fmt(amount: number) {
   return "₹" + amount.toLocaleString("en-IN");
@@ -30,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: generateTitle(`${product.name} — ${product.grade} CTC Tea`),
     description: generateDescription(
-      `Buy ${product.name} (${product.grade}) in bulk — ${product.description} Starting from ${fmt(product.pricePerKg * 3)} for 3 kg.`
+      `Buy ${product.name} (${product.grade}) in bulk — ${product.description} Starting from ${fmt(tierPrice(product, 3))} for 3 kg.`
     ),
   };
 }
@@ -64,29 +69,39 @@ export default async function ProductPage({ params }: Props) {
 
           {/* Pricing reference table */}
           <div className="border border-gray-200">
-            <div className="grid grid-cols-2 text-xs font-medium text-neutral-400 uppercase tracking-wide px-4 py-2 border-b border-gray-100 bg-gray-50">
+            <div className="grid grid-cols-3 text-xs font-medium text-neutral-400 uppercase tracking-wide px-4 py-2 border-b border-gray-100 bg-gray-50">
               <span>Bag size</span>
-              <span className="text-right">Price</span>
+              <span className="text-center">Per kg</span>
+              <span className="text-right">Total</span>
             </div>
-            {TIERS.map((tier, i) => (
-              <div
-                key={tier.label}
-                className={`grid grid-cols-2 px-4 py-3 ${i < TIERS.length - 1 ? "border-b border-gray-100" : ""}`}
-              >
-                <span className="text-sm text-neutral-700 font-medium">{tier.label}</span>
-                <span className="text-sm text-neutral-900 font-semibold text-right">
-                  {fmt(product.pricePerKg * tier.kg)}
-                </span>
-              </div>
-            ))}
+            {TIERS.map((tier, i) => {
+              const total = tierPrice(product, tier.kg);
+              const perKg = Math.round(total / tier.kg);
+              return (
+                <div
+                  key={tier.label}
+                  className={`grid grid-cols-3 px-4 py-3 ${i < TIERS.length - 1 ? "border-b border-gray-100" : ""}`}
+                >
+                  <span className="text-sm text-neutral-700 font-medium">{tier.label}</span>
+                  <span className="text-sm text-neutral-400 text-center">{fmt(perKg)}/kg</span>
+                  <span className="text-sm text-neutral-900 font-semibold text-right">{fmt(total)}</span>
+                </div>
+              );
+            })}
           </div>
 
-          <p className="text-xs text-neutral-400">
-            {fmt(product.pricePerKg)}/kg · Prices exclude shipping · Direct from Assam gardens
-          </p>
+          {"delivery" in product && product.delivery ? (
+            <p className="text-xs text-neutral-400">
+              Delivery: ₹{(product.delivery as { upTo5kg: number; above5kg: number }).upTo5kg} up to 5 kg · ₹{(product.delivery as { upTo5kg: number; above5kg: number }).above5kg} above 5 kg · Direct from Assam gardens
+            </p>
+          ) : (
+            <p className="text-xs text-neutral-400">
+              Prices exclude shipping · Direct from Assam gardens
+            </p>
+          )}
 
           {/* Interactive buy section */}
-          <ProductBuySection slug={product.slug} pricePerKg={product.pricePerKg} />
+          <ProductBuySection slug={product.slug} pricePerKg={product.pricePerKg} prices={"prices" in product ? product.prices as Record<number, number> : undefined} />
 
           <Link
             href="/buy-samples"
