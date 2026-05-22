@@ -7,11 +7,16 @@ import { chaiProducts } from "@/data/chai-products";
 import { getCart, saveCart, CART_EVENT, type CartItem } from "@/lib/cart";
 import { CheckoutForm } from "@/components/buy-samples/CheckoutForm";
 
-const WEIGHTS = [3, 5, 10, 20] as const;
+const WEIGHTS = [1, 3, 5, 10, 20] as const;
 type Weight = (typeof WEIGHTS)[number];
 
 function fmt(n: number) {
   return "₹" + n.toLocaleString("en-IN");
+}
+
+function getPrice(product: (typeof chaiProducts)[number], kg: number): number {
+  const prices = "prices" in product ? (product as { prices: Record<number, number> }).prices : undefined;
+  return prices?.[kg] ?? product.pricePerKg * kg;
 }
 
 type EnrichedItem = CartItem & { product: (typeof chaiProducts)[number] };
@@ -56,7 +61,7 @@ function OtherProductCard({
         >
           {WEIGHTS.map((w) => (
             <option key={w} value={w}>
-              {w} kg — {fmt(product.pricePerKg * w)}
+              {w} kg — {fmt(getPrice(product, w))}
             </option>
           ))}
         </select>
@@ -80,7 +85,7 @@ function OtherProductCard({
           <span className="text-xs text-neutral-400">{qty === 1 ? "bag" : "bags"}</span>
         </div>
 
-        <p className="text-base font-semibold text-neutral-900">{fmt(product.pricePerKg * kg * qty)}</p>
+        <p className="text-base font-semibold text-neutral-900">{fmt(getPrice(product, kg) * qty)}</p>
 
         <button
           type="button"
@@ -161,7 +166,7 @@ function CartPageInner() {
     .filter(Boolean) as EnrichedItem[];
 
   const total = enriched.reduce(
-    (s, i) => s + i.product.pricePerKg * i.kg * i.quantity,
+    (s, i) => s + getPrice(i.product, i.kg) * i.quantity,
     0
   );
 
@@ -271,7 +276,7 @@ function CartPageInner() {
                     </div>
 
                     <p className="text-sm font-semibold text-neutral-900 ml-auto">
-                      {fmt(item.product.pricePerKg * item.kg * item.quantity)}
+                      {fmt(getPrice(item.product, item.kg) * item.quantity)}
                     </p>
                   </div>
                 </div>
