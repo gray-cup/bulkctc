@@ -104,7 +104,7 @@ function ProductCard({ product }: { product: (typeof chaiProducts)[number] }) {
       <div className="relative w-full aspect-[3/4]">
         <Image src="/wholesale-chai.png" alt={product.name} fill className="object-cover" />
       </div>
-      <div className="flex flex-col flex-1 p-4 gap-3">
+      <div className="flex flex-col flex-1 p-3 gap-2.5">
         <div>
           <Link
             href={`/products/${product.slug}`}
@@ -170,7 +170,7 @@ export default function BuySamplesPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 lg:px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {chaiProducts.map((product) => (
             <ProductCard key={product.slug} product={product} />
           ))}
