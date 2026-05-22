@@ -1,11 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { WhatsAppQuoteBtn, WHATSAPP_DEFAULT_MESSAGE } from "@/components/whatsapp-quote-btn";
+import { getCart, CART_EVENT } from "@/lib/cart";
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const update = () =>
+      setCartCount(getCart().reduce((s, i) => s + i.quantity, 0));
+    update();
+    window.addEventListener(CART_EVENT, update);
+    return () => window.removeEventListener(CART_EVENT, update);
+  }, []);
 
   return (
     <>
@@ -47,6 +57,19 @@ export function Navbar() {
 
           {/* RIGHT */}
           <div className="flex items-center gap-3">
+            {/* Cart button */}
+            <Link
+              href="/cart"
+              className="hidden md:flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-neutral-700 border border-neutral-200 hover:border-neutral-400 hover:text-neutral-900 transition-colors"
+            >
+              Cart
+              {cartCount > 0 && (
+                <span className="bg-blue-600 text-white text-xs font-semibold px-1.5 py-0.5 leading-none min-w-[18px] text-center">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+
             <WhatsAppQuoteBtn
               message={WHATSAPP_DEFAULT_MESSAGE}
               className="hidden md:inline-flex px-5 py-2"
@@ -102,6 +125,18 @@ export function Navbar() {
                 {label}
               </Link>
             ))}
+            <Link
+              href="/cart"
+              onClick={() => setMenuOpen(false)}
+              className="px-2 py-3 text-neutral-700 hover:text-neutral-900 transition-colors flex items-center gap-2"
+            >
+              Cart
+              {cartCount > 0 && (
+                <span className="bg-blue-600 text-white text-xs font-semibold px-1.5 py-0.5 leading-none min-w-[18px] text-center">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
             <a
               href="https://graycup.org/"
               target="_blank"

@@ -1,16 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckoutForm } from "./CheckoutForm";
+import Link from "next/link";
+import { addToCart } from "@/lib/cart";
 
-const TIERS = [
-  { label: "3kg",  kg: 3  },
-  { label: "5kg",  kg: 5  },
-  { label: "10kg", kg: 10 },
-  { label: "20kg", kg: 20 },
-] as const;
-
-type TierLabel = (typeof TIERS)[number]["label"];
+const WEIGHTS = [3, 5, 10, 20] as const;
+type Weight = (typeof WEIGHTS)[number];
 
 type Props = {
   slug: string;
@@ -18,54 +13,80 @@ type Props = {
 };
 
 export function ProductBuySection({ slug, pricePerKg }: Props) {
-  const [tier, setTier]               = useState<TierLabel>("3kg");
-  const [showCheckout, setShowCheckout] = useState(false);
+  const [kg, setKg] = useState<Weight>(3);
+  const [qty, setQty] = useState(1);
+  const [added, setAdded] = useState(false);
 
-  const tierData   = TIERS.find((t) => t.label === tier)!;
-  const totalAmount = pricePerKg * tierData.kg;
+  const total = pricePerKg * kg * qty;
+
+  function handleAddToCart() {
+    addToCart(slug, kg, qty);
+    setAdded(true);
+  }
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Tier selector */}
+      {/* Weight selector */}
       <div className="flex gap-1.5 flex-wrap">
-        {TIERS.map((t) => (
+        {WEIGHTS.map((w) => (
           <button
-            key={t.label}
+            key={w}
             type="button"
-            onClick={() => setTier(t.label)}
+            onClick={() => { setKg(w); setAdded(false); }}
             className={`px-4 py-1.5 text-sm border font-medium transition-colors cursor-pointer ${
-              tier === t.label
+              kg === w
                 ? "bg-neutral-900 border-neutral-900 text-white"
                 : "border-gray-200 text-gray-500 hover:border-gray-400 hover:text-gray-700"
             }`}
           >
-            {t.label}
+            {w}kg
           </button>
         ))}
       </div>
 
-      <p className="text-2xl font-bold text-neutral-900">
-        ₹{totalAmount.toLocaleString("en-IN")}
-      </p>
-
-      {!showCheckout && (
+      {/* Quantity stepper */}
+      <div className="flex items-center gap-2">
         <button
           type="button"
-          onClick={() => setShowCheckout(true)}
+          onClick={() => { setQty((q) => Math.max(1, q - 1)); setAdded(false); }}
+          className="w-8 h-8 border border-gray-200 text-neutral-600 hover:bg-gray-50 flex items-center justify-center text-lg cursor-pointer"
+        >
+          −
+        </button>
+        <span className="w-8 text-center text-sm font-medium text-neutral-900">{qty}</span>
+        <button
+          type="button"
+          onClick={() => { setQty((q) => q + 1); setAdded(false); }}
+          className="w-8 h-8 border border-gray-200 text-neutral-600 hover:bg-gray-50 flex items-center justify-center text-lg cursor-pointer"
+        >
+          +
+        </button>
+        <span className="text-xs text-neutral-400">{qty === 1 ? "bag" : "bags"}</span>
+      </div>
+
+      <p className="text-2xl font-bold text-neutral-900">
+        ₹{total.toLocaleString("en-IN")}
+      </p>
+
+      {!added ? (
+        <button
+          type="button"
+          onClick={handleAddToCart}
           className="w-full py-3 bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors cursor-pointer active:scale-95"
         >
-          Buy Now
+          Add to Cart
         </button>
-      )}
-
-      {showCheckout && (
-        <div className="border border-gray-200 p-5 mt-2">
-          <CheckoutForm
-            products={[slug]}
-            quantityTier={tier}
-            totalAmount={totalAmount}
-            onBack={() => setShowCheckout(false)}
-          />
+      ) : (
+        <div className="flex flex-col gap-2">
+          <div className="w-full py-3 bg-green-600 text-white text-sm font-semibold text-center">
+            Added to Cart ✓
+          </div>
+          <Link
+            href="/cart"
+            className="w-full py-3 bg-neutral-900 text-white text-sm font-semibold text-center hover:bg-neutral-800 transition-colors"
+          >
+            View Cart →
+          </Link>
         </div>
       )}
     </div>
