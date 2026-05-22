@@ -19,7 +19,7 @@ export function Navbar() {
 
   return (
     <>
-      <header className="w-full bg-white">
+      <header className="w-full bg-white md:sticky md:top-0 md:z-30 md:border-b md:border-neutral-100">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           {/* LEFT */}
           <div className="flex items-center gap-8">

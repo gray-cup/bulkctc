@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   const links = [
@@ -38,7 +39,13 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-xs text-neutral-400">
-          <p>© {new Date().getFullYear()} BulkCTC. All rights reserved.</p>
+          <div className="flex items-center gap-3">
+            <p>© {new Date().getFullYear()} BulkCTC. All rights reserved.</p>
+            <span className="flex items-center gap-1.5 text-neutral-400">
+              Powered by
+              <Image src="/upi.svg" alt="UPI" width={32} height={12} />
+            </span>
+          </div>
           <div className="flex flex-wrap items-center gap-3">
             <p>
               FSSAI: <span className="whitespace-nowrap">23326008000195</span>

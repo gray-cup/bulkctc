@@ -39,7 +39,7 @@ function WeightDropdown({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between gap-2 border border-gray-200 bg-white px-3 py-2.5 text-sm text-neutral-700 hover:border-gray-400 transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between gap-2 border border-gray-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:border-gray-400 transition-colors cursor-pointer"
       >
         <span className="font-medium">{kg} kg</span>
         <span className="text-xs text-neutral-400">{fmt(product.pricePerKg * kg)}</span>
@@ -96,81 +96,79 @@ function ProductCard({ product }: { product: (typeof chaiProducts)[number] }) {
 
   return (
     <div className="flex flex-col border border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm transition-all">
-      <div className="relative w-full aspect-[3/4]">
-        <Image src="/wholesale-chai.png" alt={product.name} fill className="object-cover" />
+      <div className="relative w-full aspect-[4/3]">
+        <Image src="/4-3-chai.png" alt={product.name} fill className="object-cover" />
       </div>
-      <div className="flex flex-col flex-1 p-4 gap-3">
+      <div className="flex flex-col flex-1 p-3 gap-2.5">
+        {/* Name + blend */}
         <div>
           <Link
             href={`/products/${product.slug}`}
-            className="block font-semibold text-sm text-neutral-900 hover:underline"
+            className="block font-semibold text-sm text-neutral-900 hover:underline leading-snug"
           >
             {product.name}
           </Link>
           <p className="text-xs text-neutral-400 mt-0.5">{product.blend}</p>
         </div>
 
+        {/* Weight dropdown */}
         <WeightDropdown product={product} kg={kg} onChange={setKg} />
 
+        {/* Qty + price */}
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => setQty((q) => Math.max(1, q - 1))}
-            className="w-10 h-10 border border-gray-200 text-neutral-600 hover:bg-gray-100 flex items-center justify-center text-xl font-medium cursor-pointer transition-colors"
+            className="w-9 h-9 border border-gray-200 text-neutral-600 hover:bg-gray-100 flex items-center justify-center text-lg font-medium cursor-pointer transition-colors"
           >
             −
           </button>
-          <span className="w-8 text-center text-sm font-semibold text-neutral-900">{qty}</span>
+          <span className="w-6 text-center text-sm font-semibold text-neutral-900">{qty}</span>
           <button
             type="button"
             onClick={() => setQty((q) => q + 1)}
-            className="w-10 h-10 border border-gray-200 text-neutral-600 hover:bg-gray-100 flex items-center justify-center text-xl font-medium cursor-pointer transition-colors"
+            className="w-9 h-9 border border-gray-200 text-neutral-600 hover:bg-gray-100 flex items-center justify-center text-lg font-medium cursor-pointer transition-colors"
           >
             +
           </button>
-          <span className="text-xs text-neutral-400">{qty === 1 ? "bag" : "bags"}</span>
-          <p className="text-base font-semibold text-neutral-900 ml-auto">{fmt(price)}</p>
+          <p className="text-sm font-semibold text-neutral-900 ml-auto">{fmt(price)}</p>
         </div>
 
-        <button
-          type="button"
-          onClick={handleBuyNow}
-          className="w-full py-3 text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors cursor-pointer"
-        >
-          Buy Now
-        </button>
-
-        <button
-          type="button"
-          onClick={handleAdd}
-          className={`w-full py-3 text-sm font-medium transition-colors cursor-pointer ${
-            added ? "bg-green-600 text-white" : "bg-blue-600 text-white hover:bg-blue-700"
-          }`}
-        >
-          {added ? "Added ✓" : "Add to Cart"}
-        </button>
+        {/* Buttons */}
+        <div className="flex gap-1.5">
+          <button
+            type="button"
+            onClick={handleBuyNow}
+            className="flex-1 py-2.5 text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors cursor-pointer"
+          >
+            Buy Now
+          </button>
+          <button
+            type="button"
+            onClick={handleAdd}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors cursor-pointer ${
+              added ? "bg-green-600 text-white" : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
+          >
+            {added ? "Added ✓" : "Add to Cart"}
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-export default function BuySamplesPage() {
+export function ProductsSection() {
   return (
-    <div className="min-h-screen pb-12">
-      <div className="max-w-7xl mx-auto px-4 lg:px-6 pt-12 pb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-neutral-900 mb-2">Order Chai Samples</h1>
-        <p className="text-neutral-500 max-w-xl">
-          Select the grades you want to try. Choose your bag size and quantity per product.
-        </p>
+    <section className="max-w-6xl mx-auto px-6 pb-20">
+      <p className="text-xs font-medium uppercase tracking-widest text-neutral-400 mb-6">
+        Order Samples
+      </p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {chaiProducts.map((product) => (
+          <ProductCard key={product.slug} product={product} />
+        ))}
       </div>
-
-      <div className="max-w-7xl mx-auto px-4 lg:px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {chaiProducts.map((product) => (
-            <ProductCard key={product.slug} product={product} />
-          ))}
-        </div>
-      </div>
-    </div>
+    </section>
   );
 }

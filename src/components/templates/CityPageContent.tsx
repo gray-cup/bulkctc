@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCityInfoFromSlugs, getStateNameFromSlug, getRelatedCities, slugify } from "@/lib/cityData";
 import { WhatsAppQuoteBtn } from "@/components/whatsapp-quote-btn";
+import { ProductsSection } from "@/components/ProductsSection";
+import { UpiBtn } from "@/components/upi-btn";
 
 export function CityPageContent({ stateSlug, citySlug }: { stateSlug: string; citySlug: string }) {
   const cityInfo = getCityInfoFromSlugs(stateSlug, citySlug);
@@ -86,6 +88,7 @@ export function CityPageContent({ stateSlug, citySlug }: { stateSlug: string; ci
               message={`Hi, I found your number on BulkCTC. I am from ${cityInfo.city}, ${stateName} and I would like to enquire about bulk CTC tea supply.`}
               className="px-6 py-2.5"
             />
+            <UpiBtn />
             <Link
               href={`/${stateSlug}`}
               className="inline-block border border-neutral-300 px-6 py-2.5 text-sm font-medium text-neutral-600 hover:border-neutral-600 transition-colors"
@@ -95,6 +98,8 @@ export function CityPageContent({ stateSlug, citySlug }: { stateSlug: string; ci
           </div>
         </div>
       </section>
+
+      <ProductsSection />
 
       <section className="max-w-6xl mx-auto px-6 pb-16">
         <div className="grid grid-cols-3 gap-3">
