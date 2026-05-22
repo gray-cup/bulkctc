@@ -148,7 +148,7 @@ function ProductCard({ product }: { product: (typeof chaiProducts)[number] }) {
           <button
             type="button"
             onClick={handleAdd}
-            className={`flex-1 py-2 text-sm font-medium transition-colors cursor-pointer rounded-lg ${
+            className={`flex-1 py-2 text-sm font-medium transition-colors cursor-pointer ${
               added ? "bg-green-600 text-white" : "bg-blue-600 text-white hover:bg-blue-700"
             }`}
           >
