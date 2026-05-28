@@ -102,7 +102,7 @@ function ProductCard({ product }: { product: (typeof chaiProducts)[number] }) {
   return (
     <div className="flex flex-col border border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm transition-all">
       <div className="relative w-full aspect-[3/4]">
-        <Image src="/wholesale-chai.png" alt={product.name} fill className="object-cover" />
+        <Image src="/wholesale-chai.webp" alt={product.name} fill className="object-cover" />
       </div>
       <div className="flex flex-col flex-1 p-3 gap-2.5">
         <div>

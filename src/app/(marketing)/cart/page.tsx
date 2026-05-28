@@ -99,7 +99,7 @@ function OtherProductCard({
   return (
     <div className="flex flex-col border border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm transition-all">
       <div className="relative w-full aspect-[3/4]">
-        <Image src="/wholesale-chai.png" alt={product.name} fill className="object-cover" />
+        <Image src="/wholesale-chai.webp" alt={product.name} fill className="object-cover" />
       </div>
       <div className="flex flex-col flex-1 p-4 gap-3">
         <div>
@@ -257,7 +257,7 @@ function CartPageInner() {
               >
                 <div className="relative w-16 h-20 shrink-0 overflow-hidden bg-neutral-50">
                   <Image
-                    src="/wholesale-chai.png"
+                    src="/wholesale-chai.webp"
                     alt={item.product.name}
                     fill
                     className="object-cover"

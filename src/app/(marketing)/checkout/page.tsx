@@ -66,7 +66,7 @@ function CheckoutInner() {
             <div className="flex gap-4 p-4">
               <div className="relative w-16 h-20 shrink-0 overflow-hidden bg-neutral-50">
                 <Image
-                  src="/wholesale-chai.png"
+                  src="/wholesale-chai.webp"
                   alt={product.name}
                   fill
                   className="object-cover"

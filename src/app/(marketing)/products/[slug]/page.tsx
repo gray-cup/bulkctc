@@ -51,7 +51,7 @@ export default async function ProductPage({ params }: Props) {
         {/* Portrait image */}
         <div className="relative w-full aspect-[3/4] overflow-hidden bg-neutral-50">
           <Image
-            src="/wholesale-chai.png"
+            src="/wholesale-chai.webp"
             alt={product.name}
             fill
             className="object-cover"
