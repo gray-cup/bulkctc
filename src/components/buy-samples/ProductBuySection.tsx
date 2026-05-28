@@ -93,7 +93,7 @@ export function ProductBuySection({ slug, pricePerKg, prices }: Props) {
             href="/cart"
             className="w-full py-3 bg-neutral-900 text-white text-sm font-semibold text-center hover:bg-neutral-800 transition-colors"
           >
-            View Cart →
+            View Cart
           </Link>
         </div>
       )}
