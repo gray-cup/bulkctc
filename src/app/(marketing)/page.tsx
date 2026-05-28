@@ -41,9 +41,37 @@ export default function Home() {
   const orgLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": "https://bulkctc.com/#organization",
     name: "BulkCTC",
+    legalName: "Gray Cup Enterprises Pvt. Ltd.",
     url: "https://bulkctc.com",
-    description: "Bulk CTC tea wholesale supplier across India. Direct from Assam and Dooars gardens.",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://bulkctc.com/logo.png",
+      width: 512,
+      height: 512,
+    },
+    description: "Wholesale bulk CTC tea supplier across India. Direct from Assam and Dooars gardens.",
+    email: "bulk@graycup.in",
+    foundingDate: "2019",
+    sameAs: [
+      "https://www.linkedin.com/company/gray-cup/",
+      "https://www.instagram.com/thegraycup",
+      "https://x.com/TheGrayCup",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: "bulk@graycup.in",
+      contactType: "sales",
+      areaServed: "IN",
+      availableLanguage: ["English", "Hindi"],
+    },
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "IN",
+    },
+    areaServed: "IN",
+    additionalType: "http://www.productontology.org/id/Wholesaler",
   };
 
   return (

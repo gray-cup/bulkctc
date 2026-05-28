@@ -43,7 +43,11 @@ const fontPublicSans = Public_Sans({
 });
 
 export const metadata: Metadata = {
-  title: generateTitle("Bulk CTC Tea Supplier Across India"),
+  metadataBase: new URL("https://bulkctc.com"),
+  title: {
+    default: generateTitle("Bulk CTC Tea Supplier Across India"),
+    template: `%s | BulkCTC`,
+  },
   description: generateDescription(
     "Wholesale bulk CTC tea for hotels, factories, offices, and institutions across India. Direct from Assam and Dooars gardens."
   ),
@@ -101,7 +105,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en-IN">
       <meta name="p:domain_verify" content="263c83126f8d79bccabc00711d8d80c6" />
       <body
         className={cn(
