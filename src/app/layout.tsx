@@ -106,8 +106,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en-IN">
-      <meta name="p:domain_verify" content="263c83126f8d79bccabc00711d8d80c6" />
-      <meta name="google-adsense-account" content="ca-pub-9319508737367893" />
+      <head>
+        <meta name="p:domain_verify" content="263c83126f8d79bccabc00711d8d80c6" />
+        <meta name="google-adsense-account" content="ca-pub-9319508737367893" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9319508737367893"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
@@ -118,11 +125,6 @@ export default function RootLayout({
           fontPublicSans.variable,
         )}
       >
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9319508737367893"
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-XPEBV7XMDM"
           strategy="afterInteractive"
