@@ -138,6 +138,7 @@ export default function RootLayout({
           `}
         </Script>
         <RootProviders>{children}</RootProviders>
+        <Analytics />
         {/* <UserJotWidget /> */}
         <WhatsappWidget />
         {/* <IntercomChat /> */}
