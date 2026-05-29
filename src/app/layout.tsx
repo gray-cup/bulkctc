@@ -118,6 +118,11 @@ export default function RootLayout({
         )}
       >
         <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9319508737367893"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
+        <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-XPEBV7XMDM"
           strategy="afterInteractive"
         />
