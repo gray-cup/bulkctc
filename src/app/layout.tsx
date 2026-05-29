@@ -107,6 +107,7 @@ export default function RootLayout({
   return (
     <html lang="en-IN">
       <meta name="p:domain_verify" content="263c83126f8d79bccabc00711d8d80c6" />
+      <meta name="google-adsense-account" content="ca-pub-9319508737367893" />
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
