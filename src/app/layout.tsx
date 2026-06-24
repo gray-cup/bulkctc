@@ -137,6 +137,48 @@ export default function RootLayout({
             gtag('config', 'G-XPEBV7XMDM');
           `}
         </Script>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://bulkctc.com/#organization",
+              name: "BulkCTC",
+              legalName: "Gray Cup Enterprises Private Limited",
+              url: "https://bulkctc.com",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://bulkctc.com/logo.png",
+                width: 512,
+                height: 512,
+              },
+              description:
+                "Wholesale bulk CTC tea supplier across India — direct from Assam and Dooars gardens. Serving hotels, restaurants, factories, and institutions.",
+              foundingDate: "2019",
+              email: "bulk@graycup.org",
+              sameAs: [
+                "https://x.com/TheGrayCup",
+                "https://instagram.com/thegraycup",
+                "https://www.linkedin.com/company/gray-cup/",
+                "https://www.indiamart.com/gray-cup-enterprises/",
+              ],
+              contactPoint: {
+                "@type": "ContactPoint",
+                email: "bulk@graycup.org",
+                contactType: "sales",
+                areaServed: "IN",
+                availableLanguage: ["English", "Hindi"],
+              },
+              address: {
+                "@type": "PostalAddress",
+                addressCountry: "IN",
+              },
+              areaServed: "IN",
+              additionalType: "http://www.productontology.org/id/Wholesaler",
+            }),
+          }}
+        />
         <RootProviders>{children}</RootProviders>
         <Analytics />
         {/* <UserJotWidget /> */}
