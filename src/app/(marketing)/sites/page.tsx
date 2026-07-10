@@ -98,6 +98,31 @@ export default function SitesPage() {
             Visit purecha.in →
           </Link>
         </div>
+
+        {/* Indian Green Coffee Card */}
+        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="text-2xl font-semibold text-gray-900">Indian Green Coffee</h2>
+          <p className="mt-3 text-gray-600">
+            An origin guide to India&apos;s green coffee — Koraput, Halflong,
+            Chikmagalur, and Bababudangiri estates, processing methods, and
+            grading, for buyers researching where their coffee comes from.
+          </p>
+
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-gray-600">
+            <li>Growing regions and terroir</li>
+            <li>Processing methods explained</li>
+            <li>A catalogue of current lots</li>
+          </ul>
+
+          <Link
+            href="https://indiangreencoffee.com"
+            className="mt-6 inline-block font-medium text-primary-600 hover:underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Visit indiangreencoffee.com →
+          </Link>
+        </div>
       </section>
 
       {/* Ownership Note */}
