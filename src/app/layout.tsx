@@ -79,6 +79,7 @@ export const metadata: Metadata = {
     description: generateDescription(
       "Wholesale bulk CTC tea for hotels, factories, offices, and institutions across India. Direct from Assam and Dooars gardens."
     ),
+    siteName: "BulkCTC",
     images: [
       {
         url: "https://bulkctc.com/og.png",
@@ -137,6 +138,19 @@ export default function RootLayout({
             gtag('config', 'G-XPEBV7XMDM');
           `}
         </Script>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://bulkctc.com/#website",
+              name: "BulkCTC",
+              alternateName: "Bulk CTC Tea",
+              url: "https://bulkctc.com",
+            }),
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
