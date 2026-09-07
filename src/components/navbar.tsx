@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { WhatsAppQuoteBtn, WHATSAPP_DEFAULT_MESSAGE } from "@/components/whatsapp-quote-btn";
 import { getCart, CART_EVENT } from "@/lib/cart";
+import { SaleBanner } from "@/components/sale-banner";
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -19,6 +20,7 @@ export function Navbar() {
 
   return (
     <>
+      <SaleBanner />
       <header className="w-full bg-white md:sticky md:top-0 md:z-30 md:border-b md:border-neutral-100">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           {/* LEFT */}

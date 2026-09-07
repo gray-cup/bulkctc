@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Turnstile, useTurnstile } from "@/components/ui/turnstile";
 import type { ChaiOrderRequest } from "@/app/api/create-payment/route";
+import { deliveryFeeForGrams, unitPriceForSlug, type CartLine } from "@/lib/pricing";
 
 const businessCategories = [
   { id: "hotel",     label: "Hotel" },
@@ -38,14 +39,20 @@ function validate(fields: {
 }
 
 type Props = {
-  products: string[];
-  quantityTier: string;
-  totalAmount: number;
+  items: CartLine[];
   onBack?: () => void;
 };
 
-export function CheckoutForm({ products, quantityTier, totalAmount, onBack }: Props) {
+export function CheckoutForm({ items, onBack }: Props) {
   const turnstile = useTurnstile();
+
+  // Display only - the server independently recomputes this from `items`
+  // against the product catalogue, so a tampered request can't change what's
+  // actually charged.
+  const subtotal = items.reduce((sum, i) => sum + unitPriceForSlug(i.slug, i.kg) * i.quantity, 0);
+  const totalGrams = items.reduce((sum, i) => sum + i.kg * 1000 * i.quantity, 0);
+  const deliveryFee = deliveryFeeForGrams(totalGrams);
+  const totalAmount = subtotal + deliveryFee;
 
   const [customerType, setCustomerType] = useState<"individual" | "business">("individual");
   const [name,         setName]         = useState("");
@@ -87,9 +94,7 @@ export function CheckoutForm({ products, quantityTier, totalAmount, onBack }: Pr
       state:        state        || undefined,
       gstNumber:    gstNumber    || undefined,
       businessType: businessType || undefined,
-      products,
-      quantityTier,
-      totalAmount,
+      items,
     };
 
     try {
@@ -289,7 +294,7 @@ export function CheckoutForm({ products, quantityTier, totalAmount, onBack }: Pr
 
         <button
           type="submit"
-          disabled={!turnstile.isVerified || isLoading || products.length === 0}
+          disabled={!turnstile.isVerified || isLoading || items.length === 0}
           className="w-full h-11 bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer active:scale-95"
         >
           {isLoading ? "Processing…" : `Pay ₹${totalAmount.toLocaleString("en-IN")} & Order`}

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { chaiProducts } from "@/data/chai-products";
 import { CheckoutForm } from "@/components/buy-samples/CheckoutForm";
+import { deliveryFeeForGrams, unitPriceForSlug } from "@/lib/pricing";
 
 function fmt(n: number) {
   return "₹" + n.toLocaleString("en-IN");
@@ -30,18 +31,11 @@ function CheckoutInner() {
     );
   }
 
-  const unitPrice = ("prices" in product && product.prices)
-    ? (product.prices as Record<number, number>)[kg] ?? product.pricePerKg * kg
-    : product.pricePerKg * kg;
+  const unitPrice = unitPriceForSlug(product.slug, kg);
   const subtotal = unitPrice * qty;
 
-  const deliveryInfo = "delivery" in product
-    ? (product.delivery as { upTo5kg: number; above5kg: number })
-    : null;
-  const totalKg = kg * qty;
-  const deliveryFee = deliveryInfo
-    ? (totalKg <= 5 ? deliveryInfo.upTo5kg : deliveryInfo.above5kg)
-    : 0;
+  const totalGrams = kg * 1000 * qty;
+  const deliveryFee = deliveryFeeForGrams(totalGrams);
 
   const total = subtotal + deliveryFee;
 
@@ -100,9 +94,7 @@ function CheckoutInner() {
           {/* Checkout form */}
           <div>
             <CheckoutForm
-              products={[product.slug]}
-              quantityTier={`${qty}×${kg}kg`}
-              totalAmount={total}
+              items={[{ slug: product.slug, kg, quantity: qty }]}
             />
           </div>
         </div>

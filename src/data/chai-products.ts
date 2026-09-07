@@ -16,7 +16,6 @@ export const chaiProducts = [
     description: "Pekoe Dust — deep mahogany colour, bold full-bodied flavour. The hallmark of a proper kadak cup.",
     pricePerKg: 350,
     prices: { 1: 350, 3: 1050, 5: 1690, 10: 3300, 20: 6500 } as Record<number, number>,
-    delivery: { upTo5kg: 150, above5kg: 400 } as { upTo5kg: number; above5kg: number },
   },
   {
     slug: "hotel-chai",

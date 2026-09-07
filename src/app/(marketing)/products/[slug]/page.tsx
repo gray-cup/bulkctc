@@ -90,15 +90,9 @@ export default async function ProductPage({ params }: Props) {
             })}
           </div>
 
-          {"delivery" in product && product.delivery ? (
-            <p className="text-xs text-neutral-400">
-              Delivery: ₹{(product.delivery as { upTo5kg: number; above5kg: number }).upTo5kg} up to 5 kg · ₹{(product.delivery as { upTo5kg: number; above5kg: number }).above5kg} above 5 kg · Direct from Assam gardens
-            </p>
-          ) : (
-            <p className="text-xs text-neutral-400">
-              Prices exclude shipping · Direct from Assam gardens
-            </p>
-          )}
+          <p className="text-xs text-neutral-400">
+            Prices exclude delivery · Direct from Assam gardens
+          </p>
 
           {/* Interactive buy section */}
           <ProductBuySection slug={product.slug} pricePerKg={product.pricePerKg} prices={"prices" in product ? product.prices as Record<number, number> : undefined} />

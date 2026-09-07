@@ -6,9 +6,7 @@ import Link from "next/link";
 import { chaiProducts } from "@/data/chai-products";
 import { getCart, saveCart, CART_EVENT, type CartItem } from "@/lib/cart";
 import { CheckoutForm } from "@/components/buy-samples/CheckoutForm";
-
-const WEIGHTS = [1, 3, 5, 10, 20] as const;
-type Weight = (typeof WEIGHTS)[number];
+import { WEIGHTS, deliveryFeeForGrams, type Weight } from "@/lib/pricing";
 
 function fmt(n: number) {
   return "₹" + n.toLocaleString("en-IN");
@@ -211,10 +209,13 @@ function CartPageInner() {
     })
     .filter(Boolean) as EnrichedItem[];
 
-  const total = enriched.reduce(
+  const subtotal = enriched.reduce(
     (s, i) => s + getPrice(i.product, i.kg) * i.quantity,
     0
   );
+  const totalGrams = enriched.reduce((s, i) => s + i.kg * 1000 * i.quantity, 0);
+  const deliveryFee = deliveryFeeForGrams(totalGrams);
+  const total = subtotal + deliveryFee;
 
   const cartSlugs = new Set(enriched.map((i) => i.slug));
   const otherProducts = chaiProducts.filter((p) => !cartSlugs.has(p.slug));
@@ -321,7 +322,15 @@ function CartPageInner() {
               </div>
             ))}
 
-            <div className="flex justify-between px-4 py-3 border-t border-gray-200 bg-gray-50">
+            <div className="flex justify-between px-4 py-2 border-t border-gray-200 bg-gray-50 text-xs text-neutral-500">
+              <p>Subtotal</p>
+              <p>{fmt(subtotal)}</p>
+            </div>
+            <div className="flex justify-between px-4 py-2 bg-gray-50 text-xs text-neutral-500">
+              <p>Delivery</p>
+              <p>{fmt(deliveryFee)}</p>
+            </div>
+            <div className="flex justify-between px-4 py-3 bg-gray-50">
               <p className="text-sm font-semibold text-neutral-900">Total</p>
               <p className="text-sm font-semibold text-neutral-900">{fmt(total)}</p>
             </div>
@@ -330,11 +339,7 @@ function CartPageInner() {
           {/* Checkout panel */}
           <div className="sticky top-8 border border-gray-200 p-5">
             <CheckoutForm
-              products={enriched.map((i) => i.slug)}
-              quantityTier={enriched
-                .map((i) => `${i.quantity}×${i.kg}kg ${i.product.name}`)
-                .join(", ")}
-              totalAmount={total}
+              items={enriched.map((i) => ({ slug: i.slug, kg: i.kg, quantity: i.quantity }))}
             />
           </div>
         </div>

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { bulkctc_orders } from "@/db/schema";
+import { chaiProducts } from "@/data/chai-products";
+import { computeOrderTotal, unitPriceForSlug, type CartLine } from "@/lib/pricing";
 
 const CASHFREE_API_URL     = "https://api.cashfree.com/pg/links";
 const CASHFREE_CLIENT_ID     = process.env.CASHFREE_CLIENT_ID;
@@ -15,9 +18,7 @@ export interface ChaiOrderRequest {
   state?:        string;
   gstNumber?:    string;
   businessType?: string;
-  products:      string[];
-  quantityTier:  string;
-  totalAmount:   number;
+  items:         CartLine[]; // { slug, kg, quantity }[] - price is always recomputed server-side from this
 }
 
 export async function POST(request: NextRequest) {
@@ -27,11 +28,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body: ChaiOrderRequest = await request.json();
-    const { name, phone, email, pincode, address, state, gstNumber, businessType, products, quantityTier, totalAmount } = body;
+    const { name, phone, email, pincode, address, state, gstNumber, businessType, items } = body;
 
-    if (!name || !phone || !address || !pincode || products.length === 0) {
+    if (!name || !phone || !address || !pincode || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
         { error: "Name, phone, address, pincode and at least one product are required" },
+        { status: 400 },
+      );
+    }
+
+    // The order total is ALWAYS computed here from our own product/weight
+    // catalogue - the client cannot influence the charged amount by editing
+    // the request body. computeOrderTotal throws if any slug/kg is invalid.
+    let totalAmount: number;
+    try {
+      totalAmount = computeOrderTotal(items);
+    } catch (err) {
+      return NextResponse.json(
+        { error: err instanceof Error ? err.message : "Invalid order items" },
         { status: 400 },
       );
     }
@@ -42,6 +56,27 @@ export async function POST(request: NextRequest) {
 
     const origin = request.headers.get("origin") || "https://bulkctc.com";
 
+    const productSlugs = items.map((i) => i.slug);
+    const quantityTier = items.map((i) => `${i.quantity}×${i.kg}kg`).join(", ");
+
+    // Per-item breakdown (name/image/price/weight/quantity) for the
+    // orders-graycup admin dashboard - the order row only stores the
+    // aggregate total, so this is the only place the "how much per item"
+    // detail is ever persisted.
+    const itemsDetail = items.map(({ slug, kg, quantity }) => {
+      const product = chaiProducts.find((p) => p.slug === slug);
+      const unitPrice = unitPriceForSlug(slug, kg);
+      return {
+        slug,
+        name: product?.name ?? slug,
+        image: `${origin}/4-3-chai.webp`,
+        tier: `${kg}kg`,
+        grams: kg * 1000,
+        price: unitPrice * quantity,
+        quantity,
+      };
+    });
+
     await db.insert(bulkctc_orders).values({
       name,
       phone:         phone.replace(/\D/g, "").slice(-12),
@@ -51,8 +86,9 @@ export async function POST(request: NextRequest) {
       state:         state         || null,
       gst_number:    gstNumber     || null,
       business_type: businessType  || null,
-      products:      JSON.stringify(products),
+      products:      JSON.stringify(productSlugs),
       quantity_tier: quantityTier,
+      items_detail:  JSON.stringify(itemsDetail),
       total_amount:  totalAmount,
       link_id:       linkId,
       payment_status: "pending",
@@ -62,7 +98,7 @@ export async function POST(request: NextRequest) {
       link_id:       linkId,
       link_amount:   totalAmount,
       link_currency: "INR",
-      link_purpose:  `BulkCTC — ${quantityTier} chai sample${products.length > 1 ? "s" : ""} (${products.join(", ")})`,
+      link_purpose:  `BulkCTC — ${quantityTier} (${productSlugs.join(", ")})`,
 
       customer_details: {
         customer_name:  name,
@@ -97,6 +133,12 @@ export async function POST(request: NextRequest) {
 
     if (!cfRes.ok) {
       return NextResponse.json({ error: data.message || "Payment gateway error" }, { status: cfRes.status });
+    }
+
+    if (data.cf_link_id) {
+      await db.update(bulkctc_orders)
+        .set({ cf_link_id: String(data.cf_link_id) })
+        .where(eq(bulkctc_orders.link_id, linkId));
     }
 
     return NextResponse.json({ success: true, paymentLink: data.link_url, linkId });
