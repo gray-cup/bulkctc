@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCityInfoFromSlugs, getStateNameFromSlug, getRelatedCities, slugify } from "@/lib/cityData";
-import { WhatsAppQuoteBtn } from "@/components/whatsapp-quote-btn";
 import { ProductsSection } from "@/components/ProductsSection";
 import { UpiBtn } from "@/components/upi-btn";
 
@@ -84,10 +83,6 @@ export function CityPageContent({ stateSlug, citySlug }: { stateSlug: string; ci
             {cityInfo.cityContext}
           </p>
           <div className="flex flex-wrap gap-3">
-            <WhatsAppQuoteBtn
-              message={`Hi, I found your number on BulkCTC. I am from ${cityInfo.city}, ${stateName} and I would like to enquire about bulk CTC tea supply.`}
-              className="px-6 py-2.5"
-            />
             <UpiBtn />
             <Link
               href={`/${stateSlug}`}
@@ -153,7 +148,7 @@ export function CityPageContent({ stateSlug, citySlug }: { stateSlug: string; ci
             The most commonly ordered grades for {cityInfo.city} include BP1 (Broken Pekoe) for medium-bodied daily brew, PF1 (Pekoe Fannings) for quick-brewing high-output kitchens, and PD (Pekoe Dust) for maximum colour and strength in mass canteens. All grades are available in {cityInfo.supplyChain.packagingSizes.join(", ")} bags.
           </p>
           <p className="text-neutral-600 leading-relaxed">
-            Orders are shipped from {cityInfo.supplyChain.source} with a transit of {cityInfo.transitDays} to {cityInfo.city}. The minimum order quantity is {cityInfo.supplyChain.moq}. Businesses placing repeat orders can arrange scheduled dispatch — reach out on WhatsApp to set up a supply schedule.
+            Orders are shipped from {cityInfo.supplyChain.source} with a transit of {cityInfo.transitDays} to {cityInfo.city}. The minimum order quantity is {cityInfo.supplyChain.moq}. Businesses placing repeat orders can arrange scheduled dispatch.
           </p>
         </div>
       </section>
@@ -242,11 +237,7 @@ export function CityPageContent({ stateSlug, citySlug }: { stateSlug: string; ci
               Minimum {cityInfo.supplyChain.moq}. Delivery in {cityInfo.transitDays}.
             </p>
           </div>
-          <WhatsAppQuoteBtn
-            message={`Hi, I found your number on BulkCTC. I am from ${cityInfo.city}, ${stateName} and I would like to enquire about bulk CTC tea supply.`}
-            label="Request Quote"
-            className="px-8 py-3 whitespace-nowrap"
-          />
+          <UpiBtn className="px-8 py-3" />
         </div>
       </section>
     </div>
